@@ -6,5 +6,7 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":ratelimiter-application"))
+    implementation(project(":ratelimiter-domain"))
     implementation("org.springframework.boot:spring-boot-starter-web")
 }
