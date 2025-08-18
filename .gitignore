@@ -1,0 +1,32 @@
+# Gradle
+.gradle/
+build/
+out/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+/.idea_modules/
+
+# Kotlin
+*.class
+*.jar
+*.war
+*.ear
+*.kt~
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Spring Boot
+target/
+spring-boot-devtools.properties
+
+# Redis / Database / Local files
+*.rdb
+*.dump
+*.db
