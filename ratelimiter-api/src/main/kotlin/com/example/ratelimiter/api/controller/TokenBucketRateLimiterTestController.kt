@@ -2,20 +2,17 @@ package com.example.ratelimiter.api.controller
 
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
-import com.example.ratelimiter.application.limiter.GlobalRateLimiter
 import com.example.ratelimiter.infra.limiter.TokenBucketRateLimiter
 import org.springframework.web.bind.annotation.RequestMapping
 
-@RequestMapping("/global")
+@RequestMapping("/token-bucket")
 @RestController
-class RateLimiterTestController(
+class TokenBucketRateLimiterTestController(
     private val tokenBucketRateLimiter: TokenBucketRateLimiter
 ) {
-    private val globalLimiter = GlobalRateLimiter(capacity = 5)
-
-    @GetMapping("/test")
-    fun testLimit(): String {
-        return if (globalLimiter.tryAcquire()) {
+    @GetMapping("/limit")
+    fun testTokenLimit(): String {
+        return if (tokenBucketRateLimiter.tryAcquire("user1")) {
             "Request allowed"
         } else {
             "Rate limit exceeded"
