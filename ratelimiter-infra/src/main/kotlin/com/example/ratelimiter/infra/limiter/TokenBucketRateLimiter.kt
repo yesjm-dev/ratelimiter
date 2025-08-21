@@ -9,10 +9,9 @@ class TokenBucketRateLimiter(
     private val capacity: Int,
     private val refillRatePerSecond: Int,
 ) : RateLimiter {
-    override fun tryAcquire(key: String?): Boolean {
-        val userKey = key ?: "global"
+    override fun tryAcquire(key: String): Boolean {
         val now = Instant.now().epochSecond
-        val bucketKey = "token_bucket:$userKey"
+        val bucketKey = "token_bucket:$key"
 
         val data = redisTemplate.opsForValue().get(bucketKey)
         val (tokens, lastRefill) = if (data != null) {

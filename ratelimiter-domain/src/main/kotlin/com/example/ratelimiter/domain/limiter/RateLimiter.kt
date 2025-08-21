@@ -7,5 +7,5 @@ interface RateLimiter {
     /**
      * @param key 제한 규칙 정의용 키
      */
-    fun tryAcquire(key: String? = null): Boolean
+    fun tryAcquire(key: String): Boolean
 }
