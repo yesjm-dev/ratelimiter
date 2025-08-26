@@ -16,4 +16,11 @@ class RedisScriptConfig {
         return script
     }
 
+    @Bean
+    fun slidingWindowScript(): DefaultRedisScript<Long> {
+        val script = DefaultRedisScript<Long>()
+        script.setLocation(ClassPathResource("scripts/sliding_window.lua"))
+        script.resultType = Long::class.java
+        return script
+    }
 }
