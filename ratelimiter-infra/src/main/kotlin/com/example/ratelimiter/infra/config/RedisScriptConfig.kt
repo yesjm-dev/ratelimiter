@@ -23,4 +23,12 @@ class RedisScriptConfig {
         script.resultType = Long::class.java
         return script
     }
+
+    @Bean
+    fun tokenBucketScript(): DefaultRedisScript<Long> {
+        val script = DefaultRedisScript<Long>()
+        script.setLocation(ClassPathResource("scripts/token_bucket.lua"))
+        script.resultType = Long::class.java
+        return script
+    }
 }
