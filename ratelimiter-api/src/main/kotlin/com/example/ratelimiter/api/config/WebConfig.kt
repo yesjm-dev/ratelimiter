@@ -16,6 +16,13 @@ class WebConfig(
 ) : WebMvcConfigurer {
 
     override fun addInterceptors(registry: InterceptorRegistry) {
+        registry.addInterceptor(RateLimiterInterceptor(redisFixedWindowRateLimiter))
+            .addPathPatterns("/login/**")
 
+        registry.addInterceptor(RateLimiterInterceptor(redisSlidingWindowRateLimiter))
+            .addPathPatterns("/search/**")
+
+        registry.addInterceptor(RateLimiterInterceptor(redisTokenBucketRateLimiter))
+            .addPathPatterns("/report/**")
     }
 }

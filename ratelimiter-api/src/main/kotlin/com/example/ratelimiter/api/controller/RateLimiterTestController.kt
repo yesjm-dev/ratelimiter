@@ -1,22 +1,22 @@
 package com.example.ratelimiter.api.controller
 
+import com.example.ratelimiter.application.service.TestService
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RestController
-import com.example.ratelimiter.application.limiter.GlobalRateLimiter
-import com.example.ratelimiter.domain.limiter.RateLimiterKeys
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 
-@RequestMapping("/global")
+@RequestMapping("/")
 @RestController
-class RateLimiterTestController {
-    private val globalLimiter = GlobalRateLimiter(capacity = 5)
+class RateLimiterTestController(
+    private val testService: TestService
+) {
+    @GetMapping("/login")
+    fun login(@RequestParam user: String) = testService.login(user)
 
-    @GetMapping("/test")
-    fun testLimit(): String {
-        return if (globalLimiter.tryAcquire(RateLimiterKeys.GLOBAL)) {
-            "Request allowed"
-        } else {
-            "Rate limit exceeded"
-        }
-    }
+    @GetMapping("/search")
+    fun search(@RequestParam query: String) = testService.search(query)
+
+    @GetMapping("/report")
+    fun report(@RequestParam id: String) = testService.report(id)
 }

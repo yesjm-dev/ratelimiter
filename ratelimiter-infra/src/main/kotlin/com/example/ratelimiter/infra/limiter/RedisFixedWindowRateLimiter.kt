@@ -13,7 +13,10 @@ class RedisFixedWindowRateLimiter(
     override fun tryAcquire(key: String): Boolean {
         val redisKey = "rate:fixed:$key"
         val result = redisTemplate.execute(
-            script, listOf(redisKey), capacity.toString(), windowMillis.toString()
+            script,
+            listOf(redisKey),
+            capacity.toString(),
+            windowMillis.toString()
         )
         return result == 1L
     }
