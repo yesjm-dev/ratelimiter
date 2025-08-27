@@ -1,0 +1,11 @@
+rate-limiter:
+  sliding:
+    capacity: 5
+    window-millis: 1000
+  fixed:
+    capacity: 5
+    window-millis: 1000
+  token:
+    capacity: 10
+    refill-interval-millis: 1000
+    refill-amount: 2

@@ -1,6 +1,7 @@
 package com.example.ratelimiter.api.limiter
 
 import com.example.ratelimiter.api.RatelimiterApiApplication
+import com.example.ratelimiter.infra.config.RateLimiterProperties
 import com.example.ratelimiter.infra.config.RedisScriptConfig
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -15,7 +16,7 @@ import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 
 
-@SpringBootTest(classes = [RatelimiterApiApplication::class, RedisScriptConfig::class])
+@SpringBootTest(classes = [RatelimiterApiApplication::class, RedisScriptConfig::class, RateLimiterProperties::class])
 @Testcontainers
 class RedisFixedWindowIntegrationTest {
 
@@ -32,6 +33,9 @@ class RedisFixedWindowIntegrationTest {
     @Autowired
     lateinit var fixedWindowScript: DefaultRedisScript<Long>
 
+    @Autowired
+    lateinit var properties: RateLimiterProperties
+
     private val key = "fixed-window"
 
     @BeforeEach
@@ -42,17 +46,34 @@ class RedisFixedWindowIntegrationTest {
 
     @Test
     fun `허용 범위 내 요청`() {
-        val allowed = redisTemplate.execute(fixedWindowScript, listOf(key), "5", "1000") // 윈도우 제한 5
+        val allowed = redisTemplate.execute(
+            fixedWindowScript,
+            listOf(key),
+            properties.fixed.capacity.toString(),
+            properties.fixed.windowMillis.toString()
+        )
         assertTrue(allowed == 1L)
     }
 
     @Test
     fun `제한 초과 요청`() {
         // 먼저 5번 요청
-        repeat(5) { redisTemplate.execute(fixedWindowScript, listOf(key), "5", "1000") }
+        repeat(5) {
+            redisTemplate.execute(
+                fixedWindowScript,
+                listOf(key),
+                properties.fixed.capacity.toString(),
+                properties.fixed.windowMillis.toString()
+            )
+        }
 
         // 6번째 요청은 거부
-        val allowed = redisTemplate.execute(fixedWindowScript, listOf(key), "5", "1000")
+        val allowed = redisTemplate.execute(
+            fixedWindowScript,
+            listOf(key),
+            properties.fixed.capacity.toString(),
+            properties.fixed.windowMillis.toString()
+        )
         assertFalse(allowed == 1L)
     }
 }
